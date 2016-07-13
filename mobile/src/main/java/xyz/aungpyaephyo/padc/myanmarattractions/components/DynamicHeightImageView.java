@@ -4,7 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-public class DynamicHeightImageView extends ImageView {
+public class
+DynamicHeightImageView extends ImageView {
     private float mAspectRatio = 1.4f;
 
     public DynamicHeightImageView(Context context) {

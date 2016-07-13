@@ -8,7 +8,8 @@ import android.content.Context;
  */
 public class MyanmarAttractionsApp extends Application {
 
-    public static String TAG = MyanmarAttractionsApp.class.getSimpleName();
+    public static final String TAG="MyanmarAttractionsApp";
+
     private static Context context;
 
     @Override

@@ -11,8 +11,8 @@ import xyz.aungpyaephyo.padc.myanmarattractions.MyanmarAttractionsApp;
 import xyz.aungpyaephyo.padc.myanmarattractions.data.agents.AttractionDataAgent;
 import xyz.aungpyaephyo.padc.myanmarattractions.data.agents.HttpUrlConnectionDataAgent;
 //import xyz.aungpyaephyo.padc.myanmarattractions.data.agents.OfflineDataAgent;
-//import xyz.aungpyaephyo.padc.myanmarattractions.data.agents.OkHttpDataAgent;
-//import xyz.aungpyaephyo.padc.myanmarattractions.data.agents.retrofit.RetrofitDataAgent;
+import xyz.aungpyaephyo.padc.myanmarattractions.data.agents.OkHttpDataAgent;
+import xyz.aungpyaephyo.padc.myanmarattractions.data.agents.retrofit.RetrofitDataAgent;
 import xyz.aungpyaephyo.padc.myanmarattractions.data.vos.AttractionVO;
 import xyz.aungpyaephyo.padc.myanmarattractions.events.DataEvent;
 
@@ -31,11 +31,12 @@ public class AttractionModel {
     private static AttractionModel objInstance;
 
     private List<AttractionVO> mAttractionList;
+
     private AttractionDataAgent dataAgent;
 
     private AttractionModel() {
         mAttractionList = new ArrayList<>();
-        initDataAgent(INIT_DATA_AGENT_HTTP_URL_CONNECTION);
+        initDataAgent(INIT_DATA_AGENT_RETROFIT);
         dataAgent.loadAttractions();
     }
 
@@ -49,16 +50,16 @@ public class AttractionModel {
     private void initDataAgent(int initType) {
         switch (initType) {
             case INIT_DATA_AGENT_OFFLINE:
-               // dataAgent = OfflineDataAgent.getInstance();
+            //    dataAgent = OfflineDataAgent.getInstance();
                 break;
             case INIT_DATA_AGENT_HTTP_URL_CONNECTION:
                 dataAgent = HttpUrlConnectionDataAgent.getInstance();
                 break;
             case INIT_DATA_AGENT_OK_HTTP:
-               // dataAgent = OkHttpDataAgent.getInstance();
+                dataAgent = OkHttpDataAgent.getInstance();
                 break;
             case INIT_DATA_AGENT_RETROFIT:
-               // dataAgent = RetrofitDataAgent.getInstance();
+                dataAgent = RetrofitDataAgent.getInstance();
                 break;
         }
     }
@@ -79,7 +80,12 @@ public class AttractionModel {
     public void notifyAttractionsLoaded(List<AttractionVO> attractionList) {
         //Notify that the data is ready - using LocalBroadcast
         mAttractionList = attractionList;
+
+        //keep the data in persistent layer.
+        AttractionVO.saveAttractions(mAttractionList);
+
         broadcastAttractionLoadedWithEventBus();
+        //broadcastAttractionLoadedWithLocalBroadcastManager();
     }
 
     public void notifyErrorInLoadingAttractions(String message) {
@@ -93,6 +99,6 @@ public class AttractionModel {
     }
 
     private void broadcastAttractionLoadedWithEventBus() {
-        EventBus.getDefault().post(new DataEvent.AttractionDataLoadedEvent("extra-in-broadcast"));
+        EventBus.getDefault().post(new DataEvent.AttractionDataLoadedEvent("extra-in-broadcast", mAttractionList));
     }
 }

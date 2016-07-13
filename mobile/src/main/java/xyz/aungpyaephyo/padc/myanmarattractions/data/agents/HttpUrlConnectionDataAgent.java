@@ -56,24 +56,25 @@ public class HttpUrlConnectionDataAgent implements AttractionDataAgent {
 
                 try {
                     // create the HttpURLConnection
-                    url = new URL(MyanmarAttractionsConstants.ATTRACTION_BASE_URL + MyanmarAttractionsConstants.API_GET_ATTRACTION_LIST);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    //http://www.aungpyaephyo.xyz/myanmar_attractions/getAttractionsList.php
+                    url = new URL(MyanmarAttractionsConstants.ATTRACTION_BASE_URL + MyanmarAttractionsConstants.API_GET_ATTRACTION_LIST);  //1
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();  //2
 
                     // just want to do an HTTP POST here
-                    connection.setRequestMethod("POST");
+                    connection.setRequestMethod("POST");  //3
 
                     // uncomment this if you want to write output to this url
                     //connection.setDoOutput(true);
 
                     // give it 15 seconds to respond
-                    connection.setReadTimeout(15 * 1000);
+                    connection.setReadTimeout(15 * 1000);  //4 -miliseconds
 
-                    // Step 5 : Set true if there is need to define request parameter.
-                    connection.setDoInput(true);
+                    //if need requset parameter-> true   || otherwise -> not need to implements
+                    connection.setDoInput(true);  //5
                     connection.setDoOutput(true);
 
                     //put the request parameter into NameValuePair list.
-                    List<NameValuePair> params = new ArrayList<>();
+                    List<NameValuePair> params = new ArrayList<>();  //6    //start
                     params.add(new BasicNameValuePair(MyanmarAttractionsConstants.PARAM_ACCESS_TOKEN, MyanmarAttractionsConstants.ACCESS_TOKEN));
 
                     //write the parameters from NameValuePair list into connection obj.
@@ -85,19 +86,18 @@ public class HttpUrlConnectionDataAgent implements AttractionDataAgent {
                     writer.close();
                     outputStream.close();
 
-                    connection.connect();
+                    connection.connect();  //7
 
-                    // read the output from the server
+                    // read the output from the server  (like json file)
                     reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     stringBuilder = new StringBuilder();
 
                     String line = null;
                     while ((line = reader.readLine()) != null) {
-                        stringBuilder.append(line + "\n");
-                    }
+                        stringBuilder.append(line + "\n");  //8
+                    }   //end  (code never need change & can reuse)
 
-
-                    String responseString = stringBuilder.toString();
+                    String responseString = stringBuilder.toString();  //9
                     AttractionListResponse response = CommonInstances.getGsonInstance().fromJson(responseString, AttractionListResponse.class);
                     List<AttractionVO> attractionList = response.getAttractionList();
 
@@ -122,7 +122,7 @@ public class HttpUrlConnectionDataAgent implements AttractionDataAgent {
             }
 
             @Override
-            protected void onPostExecute(List<AttractionVO> attractionList) {
+            protected void onPostExecute(List<AttractionVO> attractionList) {   //work in ui thread
                 super.onPostExecute(attractionList);
                 if (attractionList != null || attractionList.size() > 0) {
                     AttractionModel.getInstance().notifyAttractionsLoaded(attractionList);
@@ -131,7 +131,7 @@ public class HttpUrlConnectionDataAgent implements AttractionDataAgent {
         }.execute();
     }
 
-    private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException {
+    private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException {   //helper method not need to change
         StringBuilder result = new StringBuilder();
         boolean first = true;
 
