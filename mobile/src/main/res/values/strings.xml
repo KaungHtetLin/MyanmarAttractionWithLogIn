@@ -6,5 +6,18 @@
 
     <string name="attraction_list_detail_transition_name">attraction_list_detail_transition_name</string>
     <string name="action_share">Share</string>
+    <string name="left_menu_login">Log In</string>
+    <string name="left_menu_register">register</string>
+    <string name="left_menu_title">Welcome</string>
+
+    <string name="lbl_username">UserName</string>
+    <string name="lbl_password">Password</string>
+    <string name="lbl_login">Login</string>
+    <string name="lbl_register_here">Register Here</string>
+    <string name="lbl_email">email</string>
+    <string name="lbl_phone">09 -</string>
+    <string name="lbl_dateofbirth">Date Of Birth</string>
+    <string name="lbl_country">Country of Origin</string>
+
 
 </resources>
